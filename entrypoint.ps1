@@ -21,5 +21,6 @@ if ($args.Length -eq 0) {
     Write-Output "Arguments passed: $args"
     $command = "powershell.exe " + $args -join " "
     Write-Output "Executing command: [$command]"
-    Invoke-Expression $command
+    $result = Invoke-Expression $command
+    Write-Output "Command output: $result"
 }
