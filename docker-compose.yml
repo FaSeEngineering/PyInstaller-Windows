@@ -1,0 +1,12 @@
+version: '3'
+services:
+  pyinstaller:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pyinstaller
+#    environment:
+#    isolation: process
+#    user: "NT AUTHORITY\\SYSTEM"
+#    stdin_open: true
+#    tty: true
