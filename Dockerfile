@@ -1,5 +1,13 @@
 FROM mcr.microsoft.com/windows/server:ltsc2022
 
+# Install powershell core packages
+RUN powershell -Command \
+    $ErrorActionPreference = 'Stop'; \
+    Invoke-WebRequest -Uri https://github.com/PowerShell/PowerShell/releases/download/v7.2.5/PowerShell-7.2.5-win-x64.msi -OutFile C:\powershell.msi; \
+    Start-Process msiexec.exe -ArgumentList '/i', 'C:\powershell.msi', '/quiet', '/norestart' -NoNewWindow -Wait; \
+    Remove-Item -Force C:\powershell.msi; \
+    $env:PATH += ';C:\Program Files\PowerShell\7\'
+
 # Install reqired packages
 RUN mkdir "C:\TEMP\"
 WORKDIR "C:\TEMP"

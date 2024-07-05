@@ -1,6 +1,13 @@
-param(
-    [string[]]$args
+param (
+    [switch]$NoProfile,
+    [switch]$NoLogo,
+    [string]$InputFormat,
+    [string]$OutputFormat,
+    [switch]$NonInteractive,
+    [string]$ExecutionPolicy,
+    [string]$EncodedCommand
 )
+
 
 #Output container information
 Write-Output "------------------------------------------------------------------------------"
@@ -10,17 +17,20 @@ Write-Output "Container IPv4 configuration:"
 Write-Output "IPv4 Address: $ipv4Address"
 Write-Output "IPv4 Gateway: $ipv4Gateway"
 Write-Output "------------------------------------------------------------------------------"
+Write-Output "Starting Windows Container"
+Write-Output "------------------------------------------------------------------------------"
+if ($EncodedCommand) {
+    Write-Output "Received encoded command: $EncodedCommand"
 
-#Keep the system running
-if ($args.Length -eq 0) {
-    Write-Output "No arguments passed. Running infinite loop..."
-    while ($true) {
-        Start-Sleep -Seconds 1
-    }
+    # Decode the base64-encoded command
+    $decodedBytes = [System.Convert]::FromBase64String($EncodedCommand)
+    $decodedCommand = [System.Text.Encoding]::Unicode.GetString($decodedBytes)
+    
+    Write-Output "Decoded command: $decodedCommand"
+
+    # Execute the decoded command
+    Invoke-Expression $decodedCommand
 } else {
-    Write-Output "Arguments passed: $args"
-    $command = "powershell.exe " + $args -join " "
-    Write-Output "Executing command: [$command]"
-    $result = Invoke-Expression $command
-    Write-Output "Command output: $result"
+    Write-Output "No commands passed. Starting interactive PowerShell session..."
+    Start-Process powershell.exe -NoNewWindow -Wait -ArgumentList '-NoExit'
 }
